@@ -19,13 +19,14 @@ public class MouseHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * horisontalSpeed;
-        float mouseY = Input.GetAxis("Mouse Y") * verticalSpeed;
+        float mouseX = Input.GetAxis("Mouse Y") * horisontalSpeed;
+        float mouseY = Input.GetAxis("Mouse X") * verticalSpeed;
 
-        yRotation += mouseX;
-        yRotation -= mouseY;
+        xRotation -= mouseX;
+        yRotation += mouseY;
         xRotation = Mathf.Clamp(xRotation, -90, 90);
 
+        transform.eulerAngles = new Vector3(0.0f, yRotation, 0.0f);
         camera.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
     }
 }

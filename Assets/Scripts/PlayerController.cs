@@ -2,37 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Shot")]
+    public GameObject bulletPrefab;
+    public GameObject bulletOut;
+    public float bulletPower;
+    public float bulletRechargeTime;
+    [Header("Movement")]
     public float MovementSpeed = 1;
-    public float JumpSpeed = 1;
-    public float Gravity = 9.8f;
+    public float JumpHeiht = 1;
+    public LayerMask ground;
 
-    private Vector3 moveDirection;
-    private CharacterController characterController;
     private Camera camera;
-    // Start is called before the first frame update
+    private float rechargeTimer;
+    private Vector3 moveVector;
+
+    private Rigidbody rigidbody;
+    private CapsuleCollider capsuleCollider;
+
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
         camera = Camera.main;
+        rigidbody = GetComponent<Rigidbody>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        if (characterController.isGrounded)
-        {
-            moveDirection = camera.transform.right * Input.GetAxis("Horizontal") + camera.transform.forward * Input.GetAxis("Vertical");
-            moveDirection *= MovementSpeed;
-            if (Input.GetButton("Jump"))
-            {
-                moveDirection.y = JumpSpeed;
-            }
-        }
+        // Персонаж находится на замле
+        Vector3 bottomCenterPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y, capsuleCollider.bounds.center.z);
+        // Для прыжков "в воздухе" уменьшить коэфициент 0.9f
+        bool isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, ground);
 
-        moveDirection.y -= Gravity * Time.deltaTime;
-        characterController.Move(moveDirection * Time.deltaTime);
+        // Направление движения
+        moveVector = camera.transform.right * Input.GetAxis("Horizontal") + camera.transform.forward * Input.GetAxis("Vertical");
+        
+        // Прыжок
+        if(Input.GetButton("Jump") && isGrounded)
+        {
+            rigidbody.AddForce(Vector3.up * Mathf.Sqrt(-JumpHeiht * Physics.gravity.y), ForceMode.VelocityChange);
+        }
     }
+
+    private void FixedUpdate()
+    {
+        rigidbody.MovePosition(rigidbody.position + moveVector * MovementSpeed * Time.fixedDeltaTime);
+    }
+
 }
