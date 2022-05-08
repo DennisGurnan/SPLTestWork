@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour
         if (Singleton == null) Singleton = this;
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape)) Application.Quit(0);
+    }
+
     public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);

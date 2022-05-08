@@ -6,6 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider))]
 public class EnemyController : MonoBehaviour
 {
+    [Header("Sounds")]
+    public AudioSource crySound;
+    public AudioSource shotSound;
+
     [Header("Skin")]
     public Color selectedColor = Color.yellow;
     public Color normalColor = Color.red;
@@ -18,6 +22,7 @@ public class EnemyController : MonoBehaviour
     public float bulletPower;
     public float bulletRechargeTime;
     public float sightRange = 10.0f;
+    public float hitedTime = 0.3f;
 
     [Header("Movement")]
     public bool hasMovement;
@@ -35,6 +40,7 @@ public class EnemyController : MonoBehaviour
     private bool isSelected = false;
     private bool iNeedToMove = false;
     private float selectedTimer = 0;
+    private float hitedTimer = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -53,7 +59,7 @@ public class EnemyController : MonoBehaviour
         isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, ground);
 
         // Move to target position
-        if (hasMovement && isGrounded)
+        if (hasMovement && isGrounded && (hitedTimer <= 0))
         {
             if(moveVector == Vector3.zero)
             {
@@ -92,7 +98,7 @@ public class EnemyController : MonoBehaviour
             {
                 moveVector = startPosition - transform.position;
                 moveVector.Normalize();
-                iNeedToMove = true;
+                if(hitedTimer <= 0) iNeedToMove = true;
             }
             else
             {
@@ -113,6 +119,11 @@ public class EnemyController : MonoBehaviour
 
         // Recharge timer
         if (rechargeTimer > 0) rechargeTimer -= Time.deltaTime;
+        // Hited timer
+        if (hitedTimer > 0) hitedTimer -= Time.deltaTime;
+
+        // Кажется я упал?
+        if (transform.position.y < -1f) IAmDie();
     }
 
     private void FixedUpdate()
@@ -135,6 +146,7 @@ public class EnemyController : MonoBehaviour
                     rechargeTimer = bulletRechargeTime;
                     GameObject bullet = Instantiate(bulletPrefab, bulletOut.transform.position, bulletOut.transform.rotation);
                     bullet.GetComponent<Rigidbody>().AddForce(bulletOut.transform.forward * bulletPower, ForceMode.Impulse);
+                    if (shotSound != null) shotSound.Play();
                 }
             }
         }
@@ -145,5 +157,19 @@ public class EnemyController : MonoBehaviour
         isSelected = true;
         selectedTimer = selectedTime;
         skinRenderer.material.color = selectedColor;
+    }
+
+    private void IAmDie()
+    {
+        GameObject.Destroy(gameObject, 1);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.tag == "Bullet")
+        {
+            if (crySound != null) crySound.Play();
+            hitedTimer = hitedTime;
+        }
     }
 }

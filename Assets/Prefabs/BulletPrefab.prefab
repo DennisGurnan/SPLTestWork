@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2350968601544119917}
   m_Layer: 0
   m_Name: BulletPrefab
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,4 +126,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FxPrefab: {fileID: 4132910504761924155, guid: bf60afff1b446454fa57207fd072a1c7, type: 3}
-  maxDistance: 10
+  maxDistance: 30

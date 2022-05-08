@@ -7,17 +7,17 @@ public class BulletController : MonoBehaviour
     public GameObject FxPrefab;
     public float maxDistance = 10;
 
-    private Transform playerTransform;
+    private Vector3 startPosition;
     // Start is called before the first frame update
     void Start()
     {
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        startPosition = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance(playerTransform.position, transform.position) > maxDistance) DestroyMe();
+        if (Vector3.Distance(startPosition, transform.position) > maxDistance) DestroyMe();
     }
 
     private void OnCollisionEnter(Collision collision)

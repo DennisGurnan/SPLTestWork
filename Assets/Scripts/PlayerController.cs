@@ -6,6 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Sounds")]
+    public AudioSource crySound;
+    public AudioSource shotSound;
+
     [Header("Shot")]
     public GameObject bulletPrefab;
     public GameObject bulletOut;
@@ -53,11 +57,16 @@ public class PlayerController : MonoBehaviour
             rechargeTimer = bulletRechargeTime;
             GameObject bullet = Instantiate(bulletPrefab, bulletOut.transform.position, bulletOut.transform.rotation);
             bullet.GetComponent<Rigidbody>().AddForce(bulletOut.transform.forward * bulletPower, ForceMode.Impulse);
+            if (shotSound != null) shotSound.Play();
         }
         if (rechargeTimer > 0) rechargeTimer -= Time.deltaTime;
 
         // Я проиграл?
-        if (transform.position.y < -5) GUIController.Singleton.ShowDefard();
+        if (transform.position.y < -2f)
+        {
+            crySound.Play();
+            GUIController.Singleton.ShowDefard();
+        }
     }
 
     private void FixedUpdate()
