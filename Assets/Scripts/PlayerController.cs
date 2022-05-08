@@ -46,11 +46,30 @@ public class PlayerController : MonoBehaviour
         {
             rigidbody.AddForce(Vector3.up * Mathf.Sqrt(-JumpHeiht * Physics.gravity.y), ForceMode.VelocityChange);
         }
+
+        // Выстрел
+        if(Input.GetButton("Fire1") && rechargeTimer <= 0)
+        {
+            rechargeTimer = bulletRechargeTime;
+            GameObject bullet = Instantiate(bulletPrefab, bulletOut.transform.position, bulletOut.transform.rotation);
+            bullet.GetComponent<Rigidbody>().AddForce(bulletOut.transform.forward * bulletPower, ForceMode.Impulse);
+        }
+        if (rechargeTimer > 0) rechargeTimer -= Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
         rigidbody.MovePosition(rigidbody.position + moveVector * MovementSpeed * Time.fixedDeltaTime);
+        // Целеуказатель
+        RaycastHit hit;
+        if (Physics.Raycast(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward), out hit, 20))
+        {
+            Debug.DrawRay(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward) * 20, Color.yellow);
+            if(hit.collider.tag == "Enemy")
+            {
+                hit.collider.GetComponent<EnemyController>().OnAim();
+            }
+        }
     }
 
 }
