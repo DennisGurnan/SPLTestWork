@@ -59,7 +59,7 @@ public class EnemyController : MonoBehaviour
         isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, ground);
 
         // Move to target position
-        if (hasMovement && isGrounded && (hitedTimer <= 0))
+        if (hasMovement && isGrounded)
         {
             if(moveVector == Vector3.zero)
             {
@@ -129,7 +129,7 @@ public class EnemyController : MonoBehaviour
     private void FixedUpdate()
     {
         // Move to target position
-        if ((iNeedToMove || hasMovement) && isGrounded)
+        if ((iNeedToMove || hasMovement) && isGrounded && (hitedTimer <= 0))
         {
             rigidbody.MovePosition(rigidbody.position + moveVector * MovementSpeed * Time.fixedDeltaTime);
         }
