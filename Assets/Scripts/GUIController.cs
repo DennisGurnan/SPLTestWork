@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class GUIController : MonoBehaviour
 {
-    public AudioSource victorySound;
-    public AudioSource defardSound;
     public static GUIController Singleton;
     public GameObject victoryFrame;
     public GameObject defardFrame;
@@ -22,14 +20,14 @@ public class GUIController : MonoBehaviour
     public void ShowVictory()
     {
         victoryFrame.SetActive(true);
-        if (victorySound != null) victorySound.Play();
+        if (GameManager.Singleton.victorySound != null) GameManager.Singleton.victorySound.Play();
         Cursor.visible = true;
     }
 
     public void ShowDefard()
     {
         defardFrame.SetActive(true);
-        if (defardSound != null) defardSound.Play();
+        if (GameManager.Singleton.defardSound != null) GameManager.Singleton.defardSound.Play();
         Cursor.visible = true;
     }
 }

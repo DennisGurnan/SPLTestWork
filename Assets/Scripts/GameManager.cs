@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     static public GameManager Singleton;
+    public AudioSource victorySound;
+    public AudioSource defardSound;
     // Start is called before the first frame update
     void Awake()
     {
