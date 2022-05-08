@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     public GameObject bulletOut;
     public float bulletPower;
     public float bulletRechargeTime;
+    public float sightRange = 10.0f;
 
     [Header("Movement")]
     public bool hasMovement;
@@ -126,9 +127,9 @@ public class EnemyController : MonoBehaviour
         if(rechargeTimer <= 0)
         {
             RaycastHit hit;
-            if (Physics.Raycast(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward), out hit, 20))
+            if (Physics.Raycast(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward), out hit, sightRange))
             {
-                Debug.DrawRay(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward) * 20, Color.yellow);
+                Debug.DrawRay(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward) * sightRange, Color.yellow);
                 if (hit.collider.tag == "Player")
                 {
                     rechargeTimer = bulletRechargeTime;
