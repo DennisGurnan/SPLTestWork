@@ -55,6 +55,9 @@ public class PlayerController : MonoBehaviour
             bullet.GetComponent<Rigidbody>().AddForce(bulletOut.transform.forward * bulletPower, ForceMode.Impulse);
         }
         if (rechargeTimer > 0) rechargeTimer -= Time.deltaTime;
+
+        // Я проиграл?
+        if (transform.position.y < -5) GUIController.Singleton.ShowDefard();
     }
 
     private void FixedUpdate()
@@ -72,4 +75,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.name == "Finish") GUIController.Singleton.ShowVictory();
+    }
 }
