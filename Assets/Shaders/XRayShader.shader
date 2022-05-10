@@ -4,7 +4,6 @@ Shader "Unlit/XRayShader"
 	{
 		_MainTex("Texture", 2D) = "white" {}
 		_Color("Color", Color) = (1,1,1,1)
-		//_XRayColor("XRay Color", COLOR) = (0,1,1,1)
 		_XRayPower("XRay Power", Range(0.00001, 3)) = 0.001
 	}
 	SubShader
@@ -56,7 +55,7 @@ Shader "Unlit/XRayShader"
 			{
 				// окружающий свет
 				float3 ambient = UNITY_LIGHTMODEL_AMBIENT;
-				// Истинный цвет текстуры
+				// Цвет текстуры
 				fixed3 albedo = tex2D(_MainTex, i.uv).rgb;
 				// направление взгляда
 				float3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
@@ -73,7 +72,7 @@ Shader "Unlit/XRayShader"
 			Pass{
 				Tags{"ForceNoShadowCasting" = "true"}
 				Name "XRay"
-				// Добавляем эффект смешивания Обратите внимание на порядок рендеринга Queue
+				// Добавляем эффект смешивания
 				Blend SrcAlpha one
 				// Закрываем глубокую запись
 				ZWrite off
@@ -91,15 +90,10 @@ Shader "Unlit/XRayShader"
 				#pragma fragment frag
 				#include "UnityCG.cginc"
 
-				//float4 _XRayColor;
 				float4 _Color;
 				float _XRayPower;
 			struct v2f {
 				float4 vertex :SV_POSITION;
-				// Метод 1, получение мировой точки, а затем вычисление направления взгляда на фрагмент
-				//float3 worldPos:TEXCOORD0;
-				//float3 worldNormal:TEXCOORD1;
-				// Метод второй, вычисление в пространстве объектов
 				float3 viewDir:TEXCOORD0;
 				float3 normal:TEXCOORD1;
 			};
@@ -107,10 +101,7 @@ Shader "Unlit/XRayShader"
 			v2f vert(appdata_base v) {
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				// Метод первый, получение точки мира, а затем вычисление направления обзора во фрагменте
-				//o.worldNormal = UnityObjectToWorldNormal(v.normal);
-				//o.worldPos = mul(unity_ObjectToWorld,v.vertex);
-				// Метод второй, вычисляем направление обзора в модели
+				// Ввычисляем направление обзора в модели
 				//o.worldNormal = UnityObjectToWorldNormal(v.normal);
 				o.viewDir = ObjSpaceViewDir(v.vertex);
 				o.normal = v.normal;
@@ -119,15 +110,11 @@ Shader "Unlit/XRayShader"
 
 			float4 frag(v2f i) :SV_Target{
 				/// Получить край из направления обзора и направления мировой нормали (направление обзора и направление мировой нормали перпендикулярны краю)
-				// Метод первый, получение точки мира, а затем вычисление направления обзора во фрагменте
-				//float3 worldNormal = normalize(i.worldNormal);
-				//float3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
-				// Метод второй, вычисляем направление обзора в модели
+				// Вычисляем направление обзора в модели
 				float3 worldNormal = normalize(i.normal);
 				float3 viewDir = normalize(i.viewDir);
 				// край
 				float rim = 1 - dot(worldNormal, viewDir); // 1- Пусть край равен 1
-				// return _XRayColor * pow(rim,1 / _XRayPower);
 				return _Color * pow(rim, 1 / _XRayPower);
 			}
 			ENDCG

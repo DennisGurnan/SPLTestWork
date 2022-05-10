@@ -11,14 +11,20 @@ public class PlayerController : MonoBehaviour
     public AudioSource shotSound;
 
     [Header("Shot")]
+    [Tooltip("Префаб снаряда")]
     public GameObject bulletPrefab;
+    [Tooltip("Точка вылета снаряда")]
     public GameObject bulletOut;
+    [Tooltip("Энергия вылета снаряда")]
     public float bulletPower;
+    [Tooltip("Время перезарядки")]
     public float bulletRechargeTime;
+
     [Header("Movement")]
     public float MovementSpeed = 1;
     public float JumpHeiht = 1;
-    public LayerMask ground;
+    [Tooltip("Слой земли")]
+    public LayerMask groundLayer;
 
     private Camera camera;
     private float rechargeTimer;
@@ -40,7 +46,7 @@ public class PlayerController : MonoBehaviour
         // Персонаж находится на замле
         Vector3 bottomCenterPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y, capsuleCollider.bounds.center.z);
         // Для прыжков "в воздухе" уменьшить коэфициент 0.9f
-        bool isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, ground);
+        bool isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, groundLayer);
 
         // Направление движения
         moveVector = camera.transform.right * Input.GetAxis("Horizontal") + camera.transform.forward * Input.GetAxis("Vertical");

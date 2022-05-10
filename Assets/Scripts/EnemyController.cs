@@ -13,34 +13,43 @@ public class EnemyController : MonoBehaviour
     [Header("Skin")]
     public Color selectedColor = Color.yellow;
     public Color normalColor = Color.red;
+    [Tooltip("Цвет чего изменяем")]
     public MeshRenderer skinRenderer;
+    [Tooltip("Время, которое объект считается выбраным")]
     public float selectedTime;
 
     [Header("Shot")]
+    [Tooltip("Префаб снаряда")]
     public GameObject bulletPrefab;
+    [Tooltip("Точка вылета снаряда")]
     public GameObject bulletOut;
+    [Tooltip("Энергия вылета снаряда")]
     public float bulletPower;
+    [Tooltip("Время перезарядки")]
     public float bulletRechargeTime;
+    [Tooltip("Дистанция видимости противника")]
     public float sightRange = 10.0f;
+    [Tooltip("Время контузии")]
     public float hitedTime = 0.3f;
 
     [Header("Movement")]
     public bool hasMovement;
     public float MovementSpeed = 1;
-    public LayerMask ground;
+    [Tooltip("Слой земли")]
+    public LayerMask groundLayer;
 
     // private variables
     private GameObject player;
     private Rigidbody rigidbody;
     private CapsuleCollider capsuleCollider;
     private bool isGrounded;
-    private float rechargeTimer;
+    private float rechargeTimer; // Таймер перезарядки оружия
     private Vector3 moveVector = Vector3.zero;
     private Vector3 startPosition;
     private bool isSelected = false;
     private bool iNeedToMove = false;
-    private float selectedTimer = 0;
-    private float hitedTimer = 0;
+    private float selectedTimer = 0; // Таймер проверки цвета кожи
+     private float hitedTimer = 0; // Таймер паузы при попадании
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +65,7 @@ public class EnemyController : MonoBehaviour
     {
         transform.LookAt(player.transform);
         Vector3 bottomCenterPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y, capsuleCollider.bounds.center.z);
-        isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, ground);
+        isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, groundLayer);
 
         // Move to target position
         if (hasMovement && isGrounded)
@@ -169,7 +178,7 @@ public class EnemyController : MonoBehaviour
         if (collision.collider.tag == "Bullet")
         {
             if (crySound != null) crySound.Play();
-            hitedTimer = hitedTime;
+            //hitedTimer = hitedTime;
         }
     }
 }

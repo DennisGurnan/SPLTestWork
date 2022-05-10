@@ -26,8 +26,11 @@ public class GUIController : MonoBehaviour
 
     public void ShowDefard()
     {
-        defardFrame.SetActive(true);
-        if (GameManager.Singleton.defardSound != null) GameManager.Singleton.defardSound.Play();
-        Cursor.visible = true;
+        if (!victoryFrame.activeSelf)
+        {
+            defardFrame.SetActive(true);
+            if (GameManager.Singleton.defardSound != null) GameManager.Singleton.defardSound.Play();
+            Cursor.visible = true;
+        }
     }
 }

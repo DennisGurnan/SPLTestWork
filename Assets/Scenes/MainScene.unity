@@ -1140,6 +1140,10 @@ PrefabInstance:
       propertyPath: MovementSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
 --- !u!4 &322149569 stripped
@@ -1305,6 +1309,10 @@ PrefabInstance:
     - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
       propertyPath: MovementSpeed
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
@@ -1513,6 +1521,10 @@ PrefabInstance:
       propertyPath: MovementSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
 --- !u!4 &452787654 stripped
@@ -1645,7 +1657,7 @@ MonoBehaviour:
   bulletRechargeTime: 0.5
   MovementSpeed: 5
   JumpHeiht: 1
-  ground:
+  groundLayer:
     serializedVersion: 2
     m_Bits: 64
 --- !u!114 &468227791
@@ -2170,6 +2182,10 @@ PrefabInstance:
     - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
       propertyPath: hasMovement
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
@@ -4143,6 +4159,10 @@ PrefabInstance:
     - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
       propertyPath: MovementSpeed
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
@@ -6878,6 +6898,10 @@ PrefabInstance:
     - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
       propertyPath: MovementSpeed
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8782259099279640653, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d6c1689a2d71ac4db1bd1079e18991c, type: 3}

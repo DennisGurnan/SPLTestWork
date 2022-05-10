@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
+    [Tooltip("Ёфект взрыва")]
     public GameObject FxPrefab;
+    [Tooltip("ћаксимальна€ дальность полета")]
     public float maxDistance = 10;
 
     private Vector3 startPosition;
@@ -28,6 +30,6 @@ public class BulletController : MonoBehaviour
     private void DestroyMe()
     {
         Instantiate(FxPrefab, transform.position, transform.rotation);
-        Destroy(gameObject);
+        Destroy(gameObject, 0.1f);
     }
 }
