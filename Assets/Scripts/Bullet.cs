@@ -2,24 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour
+public class Bullet : MonoBehaviour
 {
     [Tooltip("Ёфект взрыва")]
     public GameObject FxPrefab;
     [Tooltip("ћаксимальна€ дальность полета")]
     public float maxDistance = 10;
 
-    private Vector3 startPosition;
-    // Start is called before the first frame update
+    private Vector3 _startPosition;
+
     void Start()
     {
-        startPosition = transform.position;
+        _startPosition = transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance(startPosition, transform.position) > maxDistance) DestroyMe();
+        if (Vector3.Distance(_startPosition, transform.position) > maxDistance) DestroyMe();
     }
 
     private void OnCollisionEnter(Collision collision)

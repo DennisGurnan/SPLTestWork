@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-public class PlayerController : MonoBehaviour
+public class Player : MonoBehaviour
 {
     [Header("Sounds")]
     public AudioSource crySound;
@@ -26,58 +24,58 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Слой земли")]
     public LayerMask groundLayer;
 
-    private Camera camera;
-    private float rechargeTimer;
-    private Vector3 moveVector;
+    private Camera _camera;
+    private float _rechargeTimer;
+    private Vector3 _moveVector;
 
-    private Rigidbody rigidbody;
-    private CapsuleCollider capsuleCollider;
+    private Rigidbody _rigidbody;
+    private CapsuleCollider _capsuleCollider;
 
     void Start()
     {
-        camera = Camera.main;
-        rigidbody = GetComponent<Rigidbody>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
+        _camera = Camera.main;
+        _rigidbody = GetComponent<Rigidbody>();
+        _capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
 
     void Update()
     {
         // Персонаж находится на замле
-        Vector3 bottomCenterPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y, capsuleCollider.bounds.center.z);
+        Vector3 bottomCenterPoint = new Vector3(_capsuleCollider.bounds.center.x, _capsuleCollider.bounds.min.y, _capsuleCollider.bounds.center.z);
         // Для прыжков "в воздухе" уменьшить коэфициент 0.9f
-        bool isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, groundLayer);
+        bool isGrounded = Physics.CheckCapsule(_capsuleCollider.bounds.center, bottomCenterPoint, _capsuleCollider.bounds.size.x / 2 * 0.9f, groundLayer);
 
         // Направление движения
-        moveVector = camera.transform.right * Input.GetAxis("Horizontal") + camera.transform.forward * Input.GetAxis("Vertical");
+        _moveVector = _camera.transform.right * Input.GetAxis("Horizontal") + _camera.transform.forward * Input.GetAxis("Vertical");
         
         // Прыжок
         if(Input.GetButton("Jump") && isGrounded)
         {
-            rigidbody.AddForce(Vector3.up * Mathf.Sqrt(-JumpHeiht * Physics.gravity.y), ForceMode.VelocityChange);
+            _rigidbody.AddForce(Vector3.up * Mathf.Sqrt(-JumpHeiht * Physics.gravity.y), ForceMode.VelocityChange);
         }
 
         // Выстрел
-        if(Input.GetButton("Fire1") && rechargeTimer <= 0)
+        if(Input.GetButton("Fire1") && _rechargeTimer <= 0)
         {
-            rechargeTimer = bulletRechargeTime;
+            _rechargeTimer = bulletRechargeTime;
             GameObject bullet = Instantiate(bulletPrefab, bulletOut.transform.position, bulletOut.transform.rotation);
             bullet.GetComponent<Rigidbody>().AddForce(bulletOut.transform.forward * bulletPower, ForceMode.Impulse);
             if (shotSound != null) shotSound.Play();
         }
-        if (rechargeTimer > 0) rechargeTimer -= Time.deltaTime;
+        if (_rechargeTimer > 0) _rechargeTimer -= Time.deltaTime;
 
         // Я проиграл?
         if (transform.position.y < -2f)
         {
             crySound.Play();
-            GUIController.Singleton.ShowDefard();
+            GUIManager.Singleton.ShowDefard();
         }
     }
 
     private void FixedUpdate()
     {
-        rigidbody.MovePosition(rigidbody.position + moveVector * MovementSpeed * Time.fixedDeltaTime);
+        _rigidbody.MovePosition(_rigidbody.position + _moveVector * MovementSpeed * Time.fixedDeltaTime);
         // Целеуказатель
         RaycastHit hit;
         if (Physics.Raycast(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward), out hit, 20))
@@ -85,13 +83,13 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward) * 20, Color.yellow);
             if(hit.collider.tag == "Enemy")
             {
-                hit.collider.GetComponent<EnemyController>().OnAim();
+                hit.collider.GetComponent<Enemy>().OnAim();
             }
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.name == "Finish") GUIController.Singleton.ShowVictory();
+        if (collision.collider.name == "Finish") GUIManager.Singleton.ShowVictory();
     }
 }

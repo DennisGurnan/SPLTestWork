@@ -7,8 +7,8 @@ public class MouseHandler : MonoBehaviour
     public float horisontalSpeed = 1f;
     public float verticalSpeed = 1f;
 
-    private float xRotation = 0.0f;
-    private float yRotation = 0.0f;
+    private float _xRotation = 0.0f;
+    private float _yRotation = 0.0f;
     private Camera camera;
     // Start is called before the first frame update
     void Start()
@@ -22,11 +22,11 @@ public class MouseHandler : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse Y") * horisontalSpeed;
         float mouseY = Input.GetAxis("Mouse X") * verticalSpeed;
 
-        xRotation -= mouseX;
-        yRotation += mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90, 90);
+        _xRotation -= mouseX;
+        _yRotation += mouseY;
+        _xRotation = Mathf.Clamp(_xRotation, -90, 90);
 
-        transform.eulerAngles = new Vector3(0.0f, yRotation, 0.0f);
-        camera.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
+        transform.eulerAngles = new Vector3(0.0f, _yRotation, 0.0f);
+        camera.transform.eulerAngles = new Vector3(_xRotation, _yRotation, 0.0f);
     }
 }

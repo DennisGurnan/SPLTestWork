@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-public class EnemyController : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     [Header("Sounds")]
     public AudioSource crySound;
@@ -39,97 +37,98 @@ public class EnemyController : MonoBehaviour
     public LayerMask groundLayer;
 
     // private variables
-    private GameObject player;
-    private Rigidbody rigidbody;
-    private CapsuleCollider capsuleCollider;
-    private bool isGrounded;
-    private float rechargeTimer; // Таймер перезарядки оружия
-    private Vector3 moveVector = Vector3.zero;
-    private Vector3 startPosition;
-    private bool isSelected = false;
-    private bool iNeedToMove = false;
-    private float selectedTimer = 0; // Таймер проверки цвета кожи
-     private float hitedTimer = 0; // Таймер паузы при попадании
+    private GameObject _player;
+    private Rigidbody _rigidbody;
+    private CapsuleCollider _capsuleCollider;
+    private bool _isGrounded;
+    private float _rechargeTimer; // Таймер перезарядки оружия
+    private Vector3 _moveVector = Vector3.zero;
+    private Vector3 _startPosition;
+    private bool _isSelected = false;
+    private bool _iNeedToMove = false;
+    private float _selectedTimer = 0; // Таймер проверки цвета кожи
+     private float _hitedTimer = 0; // Таймер паузы при попадании
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        player = GameObject.FindGameObjectWithTag("Player");
-        startPosition = transform.position;
+        _rigidbody = GetComponent<Rigidbody>();
+        _capsuleCollider = GetComponent<CapsuleCollider>();
+        _player = GameObject.FindGameObjectWithTag("Player");
+        _startPosition = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(player.transform);
-        Vector3 bottomCenterPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y, capsuleCollider.bounds.center.z);
-        isGrounded = Physics.CheckCapsule(capsuleCollider.bounds.center, bottomCenterPoint, capsuleCollider.bounds.size.x / 2 * 0.9f, groundLayer);
+        transform.LookAt(_player.transform);
+        Vector3 bottomCenterPoint = new Vector3(_capsuleCollider.bounds.center.x, _capsuleCollider.bounds.min.y, _capsuleCollider.bounds.center.z);
+        _isGrounded = Physics.CheckCapsule(_capsuleCollider.bounds.center, bottomCenterPoint, _capsuleCollider.bounds.size.x / 2 * 0.9f, groundLayer);
 
         // Move to target position
-        if (hasMovement && isGrounded)
+        if (hasMovement && _isGrounded)
         {
-            if(moveVector == Vector3.zero)
+            if(_moveVector == Vector3.zero)
             {
-                moveVector = new Vector3(1, 0, 0);
+                _moveVector = new Vector3(1, 0, 0);
             }
+
             RaycastHit hit;
-            Vector3 hitFrom = transform.position + new Vector3(Mathf.Sign(moveVector.x) * 0.5f, 1, 0);
+            Vector3 hitFrom = transform.position + new Vector3(Mathf.Sign(_moveVector.x) * 0.5f, 1, 0);
             // Если по ходу движения препятствие - меняем направление
-            Debug.DrawRay(hitFrom, moveVector, Color.red);
-            if (Physics.Raycast(hitFrom, moveVector, out hit, 0.1f))
+            if (Physics.Raycast(hitFrom, _moveVector, out hit, 0.1f))
             {
-                moveVector.x = -moveVector.x;
+                _moveVector.x = -_moveVector.x;
             }
+
             // Если пол заканчивается - меняем направление
-            Vector3 floorScanPoint = hitFrom + new Vector3(-Mathf.Sign(moveVector.x) * 0.1f, 1f, 0);
+            Vector3 floorScanPoint = hitFrom + new Vector3(-Mathf.Sign(_moveVector.x) * 0.1f, 1f, 0);
             Vector3 floorScanDir = hitFrom - floorScanPoint;
-            Debug.DrawRay(hitFrom, floorScanDir, Color.green);
             if (!Physics.Raycast(hitFrom, floorScanDir, out hit, Vector3.Distance(hitFrom, floorScanDir) + 0.1f))
             {
-                moveVector.x = -moveVector.x;
+                _moveVector.x = -_moveVector.x;
             }
+
             // Если сместились по Z - возвращаемся
-            if(Mathf.Abs(transform.position.z - startPosition.z) > 0.01f)
+            if(Mathf.Abs(transform.position.z - _startPosition.z) > 0.01f)
             {
-                moveVector.z = startPosition.z - transform.position.z;
+                _moveVector.z = _startPosition.z - transform.position.z;
             }
             else
             {
-                moveVector.z = 0.0f;
+                _moveVector.z = 0.0f;
             }
         }
         else
         {
             // Если столкнули, пытаемся вернуться на исходную
-            if(Vector3.Distance(startPosition, transform.position) > 0.1f)
+            if(Vector3.Distance(_startPosition, transform.position) > 0.1f)
             {
-                moveVector = startPosition - transform.position;
-                moveVector.Normalize();
-                if(hitedTimer <= 0) iNeedToMove = true;
+                _moveVector = _startPosition - transform.position;
+                _moveVector.Normalize();
+                if(_hitedTimer <= 0) _iNeedToMove = true;
             }
             else
             {
-                iNeedToMove = false;
+                _iNeedToMove = false;
             }
         }
 
         // Skin color check
-        if (isSelected)
+        if (_isSelected)
         {
-            if (selectedTimer > 0) selectedTimer -= Time.deltaTime;
+            if (_selectedTimer > 0) _selectedTimer -= Time.deltaTime;
             else
             {
-                isSelected = false;
+                _isSelected = false;
                 skinRenderer.material.color = normalColor;
             }
         }
 
         // Recharge timer
-        if (rechargeTimer > 0) rechargeTimer -= Time.deltaTime;
+        if (_rechargeTimer > 0) _rechargeTimer -= Time.deltaTime;
         // Hited timer
-        if (hitedTimer > 0) hitedTimer -= Time.deltaTime;
+        if (_hitedTimer > 0) _hitedTimer -= Time.deltaTime;
 
         // Кажется я упал?
         if (transform.position.y < -1f) IAmDie();
@@ -138,13 +137,13 @@ public class EnemyController : MonoBehaviour
     private void FixedUpdate()
     {
         // Move to target position
-        if ((iNeedToMove || hasMovement) && isGrounded && (hitedTimer <= 0))
+        if ((_iNeedToMove || hasMovement) && _isGrounded && (_hitedTimer <= 0))
         {
-            rigidbody.MovePosition(rigidbody.position + moveVector * MovementSpeed * Time.fixedDeltaTime);
+            _rigidbody.MovePosition(_rigidbody.position + _moveVector * MovementSpeed * Time.fixedDeltaTime);
         }
 
         // Fire control
-        if(rechargeTimer <= 0)
+        if(_rechargeTimer <= 0)
         {
             RaycastHit hit;
             if (Physics.Raycast(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward), out hit, sightRange))
@@ -152,7 +151,7 @@ public class EnemyController : MonoBehaviour
                 Debug.DrawRay(bulletOut.transform.position, bulletOut.transform.TransformDirection(Vector3.forward) * sightRange, Color.yellow);
                 if (hit.collider.tag == "Player")
                 {
-                    rechargeTimer = bulletRechargeTime;
+                    _rechargeTimer = bulletRechargeTime;
                     GameObject bullet = Instantiate(bulletPrefab, bulletOut.transform.position, bulletOut.transform.rotation);
                     bullet.GetComponent<Rigidbody>().AddForce(bulletOut.transform.forward * bulletPower, ForceMode.Impulse);
                     if (shotSound != null) shotSound.Play();
@@ -163,8 +162,8 @@ public class EnemyController : MonoBehaviour
 
     public void OnAim()
     {
-        isSelected = true;
-        selectedTimer = selectedTime;
+        _isSelected = true;
+        _selectedTimer = selectedTime;
         skinRenderer.material.color = selectedColor;
     }
 

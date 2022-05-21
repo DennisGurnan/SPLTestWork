@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GUIController : MonoBehaviour
+public class GUIManager : MonoBehaviour
 {
-    public static GUIController Singleton;
+    public static GUIManager Singleton;
     public GameObject victoryFrame;
     public GameObject defardFrame;
     // Start is called before the first frame update
